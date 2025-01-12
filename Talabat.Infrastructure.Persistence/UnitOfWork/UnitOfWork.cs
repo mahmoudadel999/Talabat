@@ -6,11 +6,11 @@ using Talabat.Infrastructure.Persistence.GenericRepositories;
 
 namespace Talabat.Infrastructure.Persistence.UnitOfWork
 {
-    internal class UnitOfWork(StoreDbContext dbContext) : IUnitOfWork
+    public class UnitOfWork(StoreDbContext dbContext) : IUnitOfWork
     {
         private readonly ConcurrentDictionary<string, object> _repository = new();
 
-        public IGenericRepository<TEntity, TKey> GetRepos<TEntity, TKey>()
+        public IGenericRepository<TEntity, TKey> GetRepo<TEntity, TKey>()
             where TEntity : BaseAuditableEntity<TKey>
             where TKey : IEquatable<TKey>
         {

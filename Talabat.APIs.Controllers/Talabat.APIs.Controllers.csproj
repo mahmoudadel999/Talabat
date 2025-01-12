@@ -7,13 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Talabat.Core.Abstraction\Talabat.Core.Application.Abstraction.csproj" />
-    <ProjectReference Include="..\Talabat.Core.Domain\Talabat.Core.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Talabat.Core.Domain.Common;
 using Talabat.Core.Domain.Contract;
+using Talabat.Core.Domain.Entities.Product;
 using Talabat.Infrastructure.Persistence.Data;
 
 namespace Talabat.Infrastructure.Persistence.GenericRepositories
@@ -15,12 +16,25 @@ namespace Talabat.Infrastructure.Persistence.GenericRepositories
     {
 
         public async Task<IEnumerable<TEntity>> GetAllAsync(bool WithTracking = false)
-            => WithTracking
-            ? await _dbContext.Set<TEntity>().ToListAsync()
-            : await _dbContext.Set<TEntity>().AsNoTracking().ToListAsync();
+        {
+            if (typeof(TEntity) == typeof(Product))
+            {
+                return WithTracking
+                    ? (IEnumerable<TEntity>)await _dbContext.Set<Product>().Include(P => P.Brand).Include(P => P.Category).ToListAsync()
+                    : (IEnumerable<TEntity>)await _dbContext.Set<Product>().Include(P => P.Brand).Include(P => P.Category).AsNoTracking().ToListAsync();
+            }
+            return WithTracking
+                ? await _dbContext.Set<TEntity>().ToListAsync()
+                : await _dbContext.Set<TEntity>().AsNoTracking().ToListAsync();
+        }
 
         public async Task<TEntity?> GetAsync(TKey id)
-            => await _dbContext.Set<TEntity>().FindAsync(id);
+        {
+            if (typeof(TEntity) == typeof(Product))
+                return await _dbContext.Set<Product>().Where(P => P.Id.Equals(id)).Include(P => P.Brand).Include(P => P.Category).FirstOrDefaultAsync() as TEntity;
+
+            return await _dbContext.Set<TEntity>().FindAsync(id);
+        }
 
 
         public async Task AddAsync(TEntity entity)

@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Talabat.Core.Domain.Contract;
 using Talabat.Infrastructure.Persistence.Data;
+using Talabat.Infrastructure.Persistence.Data.Interceptors;
 
 namespace Talabat.Infrastructure.Persistence
 {
@@ -11,10 +13,16 @@ namespace Talabat.Infrastructure.Persistence
         {
             services.AddDbContext<StoreDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("StoreContext"));
+                options
+                .UseLazyLoadingProxies()
+                .UseSqlServer(configuration.GetConnectionString("StoreContext"));
             });
 
+
             services.AddScoped(typeof(IStoreDbContextInitializer), typeof(StoreDbContextInitializer));
+            services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork.UnitOfWork));
+            services.AddScoped(typeof(ISaveChangesInterceptor), typeof(CustomSaveChangesInterceptor));
+
 
             return services;
         }
