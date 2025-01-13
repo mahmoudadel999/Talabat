@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Talabat.Core.Application.Abstraction.Models.Products;
 using Talabat.Core.Application.Abstraction.Services;
-using Talabat.Core.Domain.Contract;
+using Talabat.Core.Domain.Contract.Persistence;
 using Talabat.Core.Domain.Entities.Product;
+using Talabat.Core.Domain.Specifications;
+using Talabat.Core.Domain.Specifications.Products;
 
 namespace Talabat.Core.Application.Services.Products
 {
@@ -10,14 +12,16 @@ namespace Talabat.Core.Application.Services.Products
     {
         public async Task<IEnumerable<ProductToReturnDto>> GetProductsAsync()
         {
-            var products = await unitOfWork.GetRepo<Product, int>().GetAllAsync();
+            var spec = new ProductWithBrandAndCategorySpecifications();
+            var products = await unitOfWork.GetRepo<Product, int>().GetAllWithSpecAsync(spec);
             var mappedProduct = mapper.Map<IEnumerable<ProductToReturnDto>>(products);
             return mappedProduct;
         }
 
         public async Task<ProductToReturnDto> GetProductAsync(int id)
         {
-            var product = await unitOfWork.GetRepo<Product, int>().GetAsync(id);
+            var spec = new ProductWithBrandAndCategorySpecifications();
+            var product = await unitOfWork.GetRepo<Product, int>().GetWithSpecAsync(spec);
             var mappedProduct = mapper.Map<ProductToReturnDto>(product);
             return mappedProduct;
         }

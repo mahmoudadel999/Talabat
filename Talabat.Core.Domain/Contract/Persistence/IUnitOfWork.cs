@@ -1,6 +1,6 @@
 ﻿using Talabat.Core.Domain.Entities.Product;
 
-namespace Talabat.Core.Domain.Contract
+namespace Talabat.Core.Domain.Contract.Persistence
 {
     public interface IUnitOfWork : IAsyncDisposable
     {

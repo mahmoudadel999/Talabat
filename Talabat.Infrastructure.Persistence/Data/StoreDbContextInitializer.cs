@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using Talabat.Core.Domain.Contract;
+using Talabat.Core.Domain.Contract.Persistence;
 using Talabat.Core.Domain.Entities.Product;
 
 namespace Talabat.Infrastructure.Persistence.Data

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using Talabat.Core.Domain.Common;
-using Talabat.Core.Domain.Contract;
+using Talabat.Core.Domain.Contract.Persistence;
 using Talabat.Infrastructure.Persistence.Data;
 using Talabat.Infrastructure.Persistence.GenericRepositories;
 

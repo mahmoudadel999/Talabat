@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Talabat.Core.Application.Abstraction.Services;
 using Talabat.Core.Application.Services.Products;
-using Talabat.Core.Domain.Contract;
+using Talabat.Core.Domain.Contract.Persistence;
 
 namespace Talabat.Core.Application.Services
 {
