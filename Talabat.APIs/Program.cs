@@ -3,6 +3,9 @@ using Talabat.APIs.Services;
 using Talabat.Core.Application.Abstraction;
 using Talabat.Infrastructure.Persistence;
 using Talabat.Core.Application;
+using Microsoft.AspNetCore.Mvc;
+using Talabat.APIs.Controllers.Errors;
+using Talabat.APIs.Middlewares;
 
 namespace Talabat.APIs
 {
@@ -17,7 +20,28 @@ namespace Talabat.APIs
 
             // Add services to the container.
 
-            builder.Services.AddControllers().AddApplicationPart(typeof(Controllers.AssemblyInfo).Assembly);
+            builder.Services
+                .AddControllers()
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.SuppressModelStateInvalidFilter = true;
+                    options.InvalidModelStateResponseFactory = (action) =>
+                    {
+                        {
+                            var errors = action.ModelState
+                                .Where(P => P.Value!.Errors.Count > 0)
+                                .SelectMany(P => P.Value!.Errors)
+                                .Select(E => E.ErrorMessage);
+
+                            return new BadRequestObjectResult(new ApiValidationResponse()
+                            {
+                                Errors = errors
+                            });
+                        }
+
+                    };
+                })
+                .AddApplicationPart(typeof(Controllers.AssemblyInfo).Assembly);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -42,6 +66,8 @@ namespace Talabat.APIs
 
             #region Configure middlewares
 
+            app.UseMiddleware<ExceptionHandlerMiddlewares>();
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -51,6 +77,8 @@ namespace Talabat.APIs
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseStatusCodePagesWithReExecute("/Errors/{0}");
 
             app.UseAuthorization();
 

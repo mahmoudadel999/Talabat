@@ -3,6 +3,7 @@ using Talabat.Core.Application.Abstraction.Common;
 using Talabat.Core.Application.Abstraction.Models.Products;
 using Talabat.Core.Application.Abstraction.Products;
 using Talabat.Core.Application.Abstraction.Services;
+using Talabat.Core.Application.Exceptions;
 using Talabat.Core.Domain.Contract.Persistence;
 using Talabat.Core.Domain.Entities.Product;
 using Talabat.Core.Domain.Specifications.Products;
@@ -27,6 +28,10 @@ namespace Talabat.Core.Application.Services.Products
         {
             var spec = new ProductWithBrandAndCategorySpecifications(id);
             var product = await unitOfWork.GetRepo<Product, int>().GetWithSpecAsync(spec);
+
+            if (product is null)
+                throw new NotFoundException(nameof(Product), id);
+
             var mappedProduct = mapper.Map<ProductToReturnDto>(product);
             return mappedProduct;
         }
