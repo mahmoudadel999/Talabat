@@ -1,5 +1,8 @@
 using Talabat.APIs.Extensions;
+using Talabat.APIs.Services;
+using Talabat.Core.Application.Abstraction;
 using Talabat.Infrastructure.Persistence;
+using Talabat.Core.Application;
 
 namespace Talabat.APIs
 {
@@ -14,7 +17,7 @@ namespace Talabat.APIs
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddApplicationPart(typeof(Controllers.AssemblyInfo).Assembly);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -23,13 +26,17 @@ namespace Talabat.APIs
 
             builder.Services.AddPersistenceServices(builder.Configuration);
 
+            builder.Services.AddScoped(typeof(ILoginUserService), typeof(LoginUserService));
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddApplicationServices();
+
             #endregion
 
             var app = builder.Build();
 
             #region Database initialization
 
-            await  app.InitializeStoreDbContextAsync();
+            await app.InitializeStoreDbContextAsync();
 
             #endregion
 
@@ -43,6 +50,7 @@ namespace Talabat.APIs
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
             app.UseAuthorization();
 
