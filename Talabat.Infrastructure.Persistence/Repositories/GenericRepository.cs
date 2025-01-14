@@ -18,29 +18,28 @@ namespace Talabat.Infrastructure.Persistence.GenericRepositories
     {
 
         public async Task<IEnumerable<TEntity>> GetAllAsync(bool WithTracking = false)
-        {
-            return WithTracking
+            => WithTracking
                 ? await _dbContext.Set<TEntity>().ToListAsync()
                 : await _dbContext.Set<TEntity>().AsNoTracking().ToListAsync();
-        }
+
+
+        public async Task<IEnumerable<TEntity>> GetAllWithSpecAsync(ISpecifications<TEntity, TKey> spec, bool WithTracking = false)
+            => await ApplySpec(spec).ToListAsync();
+
 
         public async Task<TEntity?> GetAsync(TKey id)
-        {
-            return await _dbContext.Set<TEntity>().FindAsync(id);
-        }
-        public async Task<IEnumerable<TEntity>> GetAllWithSpecAsync(ISpecifications<TEntity, TKey> spec, bool WithTracking = false)
-        {
-            return await ApplySpec(spec).ToListAsync();
-        }
+            => await _dbContext.Set<TEntity>().FindAsync(id);
+
 
         public async Task<TEntity?> GetWithSpecAsync(ISpecifications<TEntity, TKey> spec)
-        {
-            return await ApplySpec(spec).FirstOrDefaultAsync();
-        }
+            => await ApplySpec(spec).FirstOrDefaultAsync();
+
+
+        public async Task<int> GetCountAsync(ISpecifications<TEntity, TKey> spec)
+            => await ApplySpec(spec).CountAsync();
 
         public async Task AddAsync(TEntity entity)
             => await _dbContext.Set<TEntity>().AddAsync(entity);
-
 
         public void Update(TEntity entity)
            => _dbContext.Set<TEntity>().Update(entity);
