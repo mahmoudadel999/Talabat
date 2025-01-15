@@ -1,11 +1,12 @@
-using Talabat.APIs.Extensions;
-using Talabat.APIs.Services;
-using Talabat.Core.Application.Abstraction;
-using Talabat.Infrastructure.Persistence;
-using Talabat.Core.Application;
 using Microsoft.AspNetCore.Mvc;
 using Talabat.APIs.Controllers.Errors;
+using Talabat.APIs.Extensions;
 using Talabat.APIs.Middlewares;
+using Talabat.APIs.Services;
+using Talabat.Core.Application;
+using Talabat.Core.Application.Abstraction;
+using Talabat.Infrastructure;
+using Talabat.Infrastructure.Persistence;
 
 namespace Talabat.APIs
 {
@@ -49,10 +50,12 @@ namespace Talabat.APIs
             // Configuring connection string
 
             builder.Services.AddPersistenceServices(builder.Configuration);
+            builder.Services.AddInfrastructureServices(builder.Configuration);
 
             builder.Services.AddScoped(typeof(ILoginUserService), typeof(LoginUserService));
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddApplicationServices();
+
 
             #endregion
 
@@ -81,7 +84,7 @@ namespace Talabat.APIs
             app.UseStatusCodePagesWithReExecute("/Errors/{0}");
 
             app.UseAuthorization();
-
+            app.UseAuthentication();
 
             app.MapControllers();
 

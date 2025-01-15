@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Talabat.Core.Domain.Common;
+﻿using Talabat.Core.Domain.Common;
 using Talabat.Core.Domain.Contract;
 using Talabat.Core.Domain.Contract.Persistence;
-using Talabat.Core.Domain.Entities.Product;
 using Talabat.Infrastructure.Persistence.Data;
-using Talabat.Infrastructure.Persistence.Repositories.Generic_Repository;
 
-namespace Talabat.Infrastructure.Persistence.GenericRepositories
+namespace Talabat.Infrastructure.Persistence.Generic_Repository
 {
     public class GenericRepository<TEntity, TKey>(StoreDbContext _dbContext) : IGenericRepository<TEntity, TKey>
         where TEntity : BaseAuditableEntity<TKey>
