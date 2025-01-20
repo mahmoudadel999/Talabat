@@ -9,7 +9,7 @@
         Task<IEnumerable<TEntity>> GetAllWithSpecAsync(ISpecifications<TEntity, TKey> spec, bool WithTracking = false);
         Task<TEntity?> GetWithSpecAsync(ISpecifications<TEntity, TKey> spec);
 
-        Task<int> GetCountAsync(ISpecifications<TEntity,TKey> spec);
+        Task<int> GetCountAsync(ISpecifications<TEntity, TKey> spec);
 
         Task AddAsync(TEntity entity);
         void Update(TEntity entity);

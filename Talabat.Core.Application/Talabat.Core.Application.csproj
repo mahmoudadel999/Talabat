@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Talabat.Core.Domain\Talabat.Core.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Common\" />
+  </ItemGroup>
+
 </Project>
