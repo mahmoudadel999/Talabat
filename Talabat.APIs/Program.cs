@@ -1,8 +1,12 @@
+using Microsoft.AspNetCore.Mvc;
+using Talabat.APIs.Controllers.Errors;
 using Talabat.APIs.Extensions;
+using Talabat.APIs.Middlewares;
 using Talabat.APIs.Services;
-using Talabat.Core.Application.Abstraction;
-using Talabat.Infrastructure.Persistence;
 using Talabat.Core.Application;
+using Talabat.Core.Application.Abstraction;
+using Talabat.Infrastructure;
+using Talabat.Infrastructure.Persistence;
 
 namespace Talabat.APIs
 {
@@ -17,18 +21,42 @@ namespace Talabat.APIs
 
             // Add services to the container.
 
-            builder.Services.AddControllers().AddApplicationPart(typeof(Controllers.AssemblyInfo).Assembly);
+            builder.Services
+                .AddControllers()
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.SuppressModelStateInvalidFilter = true;
+                    options.InvalidModelStateResponseFactory = (action) =>
+                    {
+                        {
+                            var errors = action.ModelState
+                                .Where(P => P.Value!.Errors.Count > 0)
+                                .SelectMany(P => P.Value!.Errors)
+                                .Select(E => E.ErrorMessage);
+
+                            return new BadRequestObjectResult(new ApiValidationResponse()
+                            {
+                                Errors = errors
+                            });
+                        }
+
+                    };
+                })
+                .AddApplicationPart(typeof(Controllers.AssemblyInfo).Assembly);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddEndpointsApiExplorer().AddSwaggerGen();
 
             // Configuring connection string
-
+            builder.Services.AddApplicationServices();
             builder.Services.AddPersistenceServices(builder.Configuration);
+            builder.Services.AddInfrastructureServices(builder.Configuration);
 
             builder.Services.AddScoped(typeof(ILoginUserService), typeof(LoginUserService));
+
             builder.Services.AddHttpContextAccessor();
-            builder.Services.AddApplicationServices();
+
+            builder.Services.AddIdentityService(builder.Configuration);
+
 
             #endregion
 
@@ -36,11 +64,13 @@ namespace Talabat.APIs
 
             #region Database initialization
 
-            await app.InitializeStoreDbContextAsync();
+            await app.InitializeDbContextAsync();
 
             #endregion
 
             #region Configure middlewares
+
+            app.UseMiddleware<ExceptionHandlerMiddlewares>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -52,8 +82,10 @@ namespace Talabat.APIs
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseAuthorization();
+            app.UseStatusCodePagesWithReExecute("/Errors/{0}");
 
+            app.UseAuthorization();
+            app.UseAuthentication();
 
             app.MapControllers();
 

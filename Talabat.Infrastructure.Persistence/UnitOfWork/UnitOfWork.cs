@@ -2,7 +2,7 @@
 using Talabat.Core.Domain.Common;
 using Talabat.Core.Domain.Contract.Persistence;
 using Talabat.Infrastructure.Persistence.Data;
-using Talabat.Infrastructure.Persistence.GenericRepositories;
+using Talabat.Infrastructure.Persistence.Generic_Repository;
 
 namespace Talabat.Infrastructure.Persistence.UnitOfWork
 {
