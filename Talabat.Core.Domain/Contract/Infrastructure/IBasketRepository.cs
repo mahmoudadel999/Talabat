@@ -7,6 +7,5 @@ namespace Talabat.Core.Domain.Contract.Infrastructure
         Task<CustomerBasket?> GetAsync(string id);
         Task<CustomerBasket?> UpdateAsync(CustomerBasket customerBasket,TimeSpan timeToLive);
         Task<bool> DeleteAsync(string id);
-
     }
 }

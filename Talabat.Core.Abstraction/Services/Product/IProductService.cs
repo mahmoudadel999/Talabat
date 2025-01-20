@@ -2,7 +2,7 @@
 using Talabat.Core.Application.Abstraction.Models.Products;
 using Talabat.Core.Application.Abstraction.Products;
 
-namespace Talabat.Core.Application.Abstraction.Services
+namespace Talabat.Core.Application.Abstraction.Services.Product
 {
     public interface IProductService
     {

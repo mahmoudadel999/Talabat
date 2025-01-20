@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Talabat.Core.Application.Abstraction.Models.Basket;
-using Talabat.Core.Application.Abstraction.Services;
+using Talabat.Core.Application.Abstraction.Services.Basket;
 using Talabat.Core.Application.Exceptions;
 using Talabat.Core.Domain.Contract.Infrastructure;
 using Talabat.Core.Domain.Entities.Basket;

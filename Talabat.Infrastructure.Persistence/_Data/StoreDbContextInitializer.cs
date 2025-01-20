@@ -1,23 +1,15 @@
 ﻿using System.Text.Json;
-using Talabat.Core.Domain.Contract.Persistence;
+using Talabat.Core.Domain.Contract.Persistence.DbContextInitializer;
 using Talabat.Core.Domain.Entities.Product;
+using Talabat.Infrastructure.Persistence.Common;
 
 namespace Talabat.Infrastructure.Persistence.Data
 {
-    internal class StoreDbContextInitializer(StoreDbContext _dbContext) : IStoreDbContextInitializer
+    internal class StoreDbContextInitializer(StoreDbContext dbContext) : DbContextInitializer(dbContext), IStoreDbContextInitializer
     {
-        private readonly StoreDbContext _dbContext = _dbContext;
-
-        public async Task InitializeAsync()
+        public override async Task SeedAsync()
         {
-            var pendingMigrations = await _dbContext.Database.GetPendingMigrationsAsync();
-            if (pendingMigrations.Any())
-                await _dbContext.Database.MigrateAsync(); // Update database
-        }
-
-        public async Task SeedAsync()
-        {
-            if (!_dbContext.Brands.Any())
+            if (!dbContext.Brands.Any())
             {
                 var currentDirectory = Directory.GetCurrentDirectory();
                 var jsonBrands = await File.ReadAllTextAsync($"../Talabat.Infrastructure.Persistence/Data/DataSeeds/brands.json");
@@ -26,12 +18,12 @@ namespace Talabat.Infrastructure.Persistence.Data
                 if (brands?.Count > 0)
                     foreach (var brand in brands)
                     {
-                        await _dbContext.Set<ProductBrand>().AddRangeAsync(brand);
+                        await dbContext.Set<ProductBrand>().AddRangeAsync(brand);
                     }
-                await _dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync();
             }
 
-            if (!_dbContext.Categories.Any())
+            if (!dbContext.Categories.Any())
             {
                 var currentDirectory = Directory.GetCurrentDirectory();
                 var jsonCategories = await File.ReadAllTextAsync($"../Talabat.Infrastructure.Persistence/Data/DataSeeds/categories.json");
@@ -40,12 +32,12 @@ namespace Talabat.Infrastructure.Persistence.Data
                 if (categories?.Count > 0)
                     foreach (var category in categories)
                     {
-                        await _dbContext.Set<ProductCategory>().AddRangeAsync(category);
+                        await dbContext.Set<ProductCategory>().AddRangeAsync(category);
                     }
-                await _dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync();
             }
 
-            if (!_dbContext.Products.Any())
+            if (!dbContext.Products.Any())
             {
                 var currentDirectory = Directory.GetCurrentDirectory();
                 var jsonProducts = await File.ReadAllTextAsync($"../Talabat.Infrastructure.Persistence/Data/DataSeeds/products.json");
@@ -54,9 +46,9 @@ namespace Talabat.Infrastructure.Persistence.Data
                 if (products?.Count > 0)
                     foreach (var product in products)
                     {
-                        await _dbContext.Set<Product>().AddRangeAsync(product);
+                        await dbContext.Set<Product>().AddRangeAsync(product);
                     }
-                await _dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync();
             }
         }
     }

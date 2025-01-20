@@ -44,17 +44,18 @@ namespace Talabat.APIs
                 })
                 .AddApplicationPart(typeof(Controllers.AssemblyInfo).Assembly);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddEndpointsApiExplorer().AddSwaggerGen();
 
             // Configuring connection string
-
+            builder.Services.AddApplicationServices();
             builder.Services.AddPersistenceServices(builder.Configuration);
             builder.Services.AddInfrastructureServices(builder.Configuration);
 
             builder.Services.AddScoped(typeof(ILoginUserService), typeof(LoginUserService));
+
             builder.Services.AddHttpContextAccessor();
-            builder.Services.AddApplicationServices();
+
+            builder.Services.AddIdentityService(builder.Configuration);
 
 
             #endregion
@@ -63,7 +64,7 @@ namespace Talabat.APIs
 
             #region Database initialization
 
-            await app.InitializeStoreDbContextAsync();
+            await app.InitializeDbContextAsync();
 
             #endregion
 

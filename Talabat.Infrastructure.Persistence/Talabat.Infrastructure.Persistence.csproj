@@ -16,4 +16,10 @@
     <ProjectReference Include="..\Talabat.Core.Domain\Talabat.Core.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="_Identity\DataSeeds\" />
+    <Folder Include="_Identity\Interceptors\" />
+    <Folder Include="_Identity\Migrations\" />
+  </ItemGroup>
+
 </Project>
