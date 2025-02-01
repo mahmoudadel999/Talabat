@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Talabat.Core.Domain.Common;
+using Talabat.Core.Domain.Entities.Orders;
 using Talabat.Core.Domain.Entities.Product;
 using Talabat.Infrastructure.Persistence.Common;
 
@@ -7,6 +8,14 @@ namespace Talabat.Infrastructure.Persistence.Data
 {
     public class StoreDbContext(DbContextOptions<StoreDbContext> options) : DbContext(options)
     {
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductBrand> Brands { get; set; }
+        public DbSet<ProductCategory> Categories { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -31,9 +40,5 @@ namespace Talabat.Infrastructure.Persistence.Data
 
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
-
-        public DbSet<Product> Products { get; set; }
-        public DbSet<ProductBrand> Brands { get; set; }
-        public DbSet<ProductCategory> Categories { get; set; }
     }
 }

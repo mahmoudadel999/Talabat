@@ -11,7 +11,7 @@ namespace Talabat.Infrastructure.Persistence.UnitOfWork
         private readonly ConcurrentDictionary<string, object> _repository = new();
 
         public IGenericRepository<TEntity, TKey> GetRepo<TEntity, TKey>()
-            where TEntity : BaseAuditableEntity<TKey>
+            where TEntity : BaseEntity<TKey>
             where TKey : IEquatable<TKey>
         {
             return (IGenericRepository<TEntity, TKey>)_repository.GetOrAdd(typeof(TEntity).Name, new GenericRepository<TEntity, TKey>(dbContext));

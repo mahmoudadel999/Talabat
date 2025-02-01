@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Talabat.Core.Domain.Contract.Persistence.DbContextInitializer;
+using Talabat.Core.Domain.Entities.Orders;
 using Talabat.Core.Domain.Entities.Product;
 using Talabat.Infrastructure.Persistence.Common;
 
@@ -12,7 +13,7 @@ namespace Talabat.Infrastructure.Persistence.Data
             if (!dbContext.Brands.Any())
             {
                 var currentDirectory = Directory.GetCurrentDirectory();
-                var jsonBrands = await File.ReadAllTextAsync($"../Talabat.Infrastructure.Persistence/Data/DataSeeds/brands.json");
+                var jsonBrands = await File.ReadAllTextAsync($"../Talabat.Infrastructure.Persistence/_Data/DataSeeds/brands.json");
                 var brands = JsonSerializer.Deserialize<List<ProductBrand>>(jsonBrands);
 
                 if (brands?.Count > 0)
@@ -26,7 +27,7 @@ namespace Talabat.Infrastructure.Persistence.Data
             if (!dbContext.Categories.Any())
             {
                 var currentDirectory = Directory.GetCurrentDirectory();
-                var jsonCategories = await File.ReadAllTextAsync($"../Talabat.Infrastructure.Persistence/Data/DataSeeds/categories.json");
+                var jsonCategories = await File.ReadAllTextAsync($"../Talabat.Infrastructure.Persistence/_Data/DataSeeds/categories.json");
                 var categories = JsonSerializer.Deserialize<List<ProductCategory>>(jsonCategories);
 
                 if (categories?.Count > 0)
@@ -40,13 +41,26 @@ namespace Talabat.Infrastructure.Persistence.Data
             if (!dbContext.Products.Any())
             {
                 var currentDirectory = Directory.GetCurrentDirectory();
-                var jsonProducts = await File.ReadAllTextAsync($"../Talabat.Infrastructure.Persistence/Data/DataSeeds/products.json");
+                var jsonProducts = await File.ReadAllTextAsync($"../Talabat.Infrastructure.Persistence/_Data/DataSeeds/products.json");
                 var products = JsonSerializer.Deserialize<List<Product>>(jsonProducts);
 
                 if (products?.Count > 0)
                     foreach (var product in products)
                     {
                         await dbContext.Set<Product>().AddRangeAsync(product);
+                    }
+                await dbContext.SaveChangesAsync();
+            }
+
+            if (!dbContext.DeliveryMethods.Any())
+            {
+                var jsonDeliveries = await File.ReadAllTextAsync($"../Talabat.Infrastructure.Persistence/_Data/DataSeeds/delivery.json");
+                var deliveries = JsonSerializer.Deserialize<List<DeliveryMethod>>(jsonDeliveries);
+
+                if (deliveries?.Count > 0)
+                    foreach (var delivery in deliveries)
+                    {
+                        await dbContext.Set<DeliveryMethod>().AddRangeAsync(delivery);
                     }
                 await dbContext.SaveChangesAsync();
             }
