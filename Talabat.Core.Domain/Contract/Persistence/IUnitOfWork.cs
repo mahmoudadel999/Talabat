@@ -3,7 +3,7 @@
     public interface IUnitOfWork : IAsyncDisposable
     {
         IGenericRepository<TEntity, TKey> GetRepo<TEntity, TKey>()
-            where TEntity : BaseAuditableEntity<TKey> where TKey : IEquatable<TKey>;
+            where TEntity : BaseEntity<TKey> where TKey : IEquatable<TKey>;
         Task<int> CompleteAsync();
     }
 }

@@ -7,7 +7,7 @@ namespace Talabat.APIs.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public string? UserId { get; }
+        public string? UserId { get; set; }
 
         public LoginUserService(IHttpContextAccessor httpContextAccessor)
         {

@@ -1,23 +1,26 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Talabat.Core.Application.Abstraction.Models.Auth;
+using Talabat.Core.Application.Abstraction.Models.Common;
 using Talabat.Core.Application.Abstraction.Services.Auth;
 using Talabat.Core.Application.Exceptions;
+using Talabat.Core.Application.Extensions;
 using Talabat.Core.Domain.Entities.Identity;
 
 namespace Talabat.Core.Application.Services.Auth
 {
     public class AuthService(
+        IMapper mapper,
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
         IOptions<JwtSettings> jwtOptions
         ) : IAuthService
     {
-
         public async Task<UserDto> LoginAsync(LoginDto model)
         {
             var user = await userManager.FindByEmailAsync(model.Email);
@@ -48,6 +51,7 @@ namespace Talabat.Core.Application.Services.Auth
 
         public async Task<UserDto> RegisterAsync(RegisterDto model)
         {
+         
             var user = new ApplicationUser()
             {
                 DisplayName = model.DisplayName,
@@ -71,6 +75,47 @@ namespace Talabat.Core.Application.Services.Auth
                 Token = await GenerateTokenAsync(user),
             };
             return response;
+        }
+
+
+        public async Task<UserDto> GetCurrentUser(ClaimsPrincipal claimsPrincipal)
+        {
+            var email = claimsPrincipal.FindFirstValue(ClaimTypes.Email);
+            var user = await userManager.FindByEmailAsync(email!);
+
+            return new UserDto()
+            {
+                Id = user!.Id,
+                Email = user.Email!,
+                DisplayName = user!.DisplayName,
+                Token = await GenerateTokenAsync(user),
+            };
+        }
+
+        public async Task<AddressDto?> GetUserAddress(ClaimsPrincipal claimsPrincipal)
+        {
+            var user = await userManager.FindUserWithAddress(claimsPrincipal);
+
+            var address = mapper.Map<AddressDto>(user!.Address);
+
+            return address;
+        }
+
+        public async Task<AddressDto> UpdateUserAddress(ClaimsPrincipal claimsPrincipal, AddressDto model)
+        {
+            var updatedAddress = mapper.Map<Address>(model);
+
+            var user = await userManager.FindUserWithAddress(claimsPrincipal);
+
+            if (user!.Address is not null)
+                updatedAddress.Id = user.Address.Id;
+
+            user!.Address = updatedAddress;
+            var result = await userManager.UpdateAsync(user);
+
+            if (!result.Succeeded) throw new BadRequestException(result.Errors.Select(error => error.Description).Aggregate((x, y) => $"{x}, {y}"));
+
+            return model;
         }
 
         private async Task<string> GenerateTokenAsync(ApplicationUser user)
@@ -105,6 +150,11 @@ namespace Talabat.Core.Application.Services.Auth
                 );
 
             return new JwtSecurityTokenHandler().WriteToken(tokenObj);
+        }
+
+        public async Task<bool> CheckEmail(string email)
+        {
+            return await userManager.FindByEmailAsync(email) is not null;
         }
     }
 }

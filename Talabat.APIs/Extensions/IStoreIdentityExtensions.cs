@@ -48,7 +48,6 @@ namespace Talabat.APIs.Extensions
             services.AddAuthentication( authOptions =>
             {
                 authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(configOptions =>
             {
                 configOptions.TokenValidationParameters = new TokenValidationParameters()
