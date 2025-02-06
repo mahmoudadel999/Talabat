@@ -24,7 +24,7 @@ namespace Talabat.APIs.Extensions
             catch (Exception ex)
             {
                 var logger = loggerFactory.CreateLogger<Program>();
-                logger.LogError(ex, "An error occurred while migrating the database or the data seed");
+                logger.LogError(ex, $" {ex.Message} An error occurred while migrating the database or the data seed");
             }
             return app;
         }

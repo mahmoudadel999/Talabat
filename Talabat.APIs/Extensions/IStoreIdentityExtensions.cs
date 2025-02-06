@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Talabat.Core.Application.Abstraction.Models.Auth;
@@ -48,7 +47,6 @@ namespace Talabat.APIs.Extensions
             services.AddAuthentication( authOptions =>
             {
                 authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(configOptions =>
             {
                 configOptions.TokenValidationParameters = new TokenValidationParameters()

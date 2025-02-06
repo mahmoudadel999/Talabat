@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Talabat.Core.Application.Abstraction.Models.Basket;
+using Talabat.Core.Application.Abstraction.Models.Common;
+using Talabat.Core.Application.Abstraction.Models.Orders;
 using Talabat.Core.Application.Abstraction.Models.Products;
 using Talabat.Core.Domain.Entities.Basket;
+using Talabat.Core.Domain.Entities.Orders;
 using Talabat.Core.Domain.Entities.Product;
+using userAddress = Talabat.Core.Domain.Entities.Identity.Address;
+using orderAddress = Talabat.Core.Domain.Entities.Orders.Address;
+using Talabat.Shared.Models.Basket;
 
 namespace Talabat.Core.Application.Mapping
 {
@@ -16,15 +16,30 @@ namespace Talabat.Core.Application.Mapping
         public MappingProfile()
         {
             CreateMap<Product, ProductToReturnDto>()
-                .ForMember(D => D.Brand, O => O.MapFrom(S => S.Brand!.Name))
-                .ForMember(D => D.Category, O => O.MapFrom(S => S.Category!.Name))
-                .ForMember(D => D.PictureUrl, O => O.MapFrom<ProductPictureUrlResolver>());
+                .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Brand!.Name))
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category!.Name))
+                .ForMember(dest => dest.PictureUrl, opt => opt.MapFrom<ProductPictureUrlResolver>());
             CreateMap<ProductBrand, ProductToReturnDto>();
             CreateMap<ProductBrand, BrandDto>();
             CreateMap<ProductCategory, CategoryDto>();
 
             CreateMap<CustomerBasket, CustomerBasketDto>().ReverseMap();
             CreateMap<BasketItem, BasketItemDto>().ReverseMap();
+
+            CreateMap<Order, OrderToReturnDto>()
+               .ForMember(dest => dest.DeliveryMethod, opt => opt.MapFrom(src => src.DeliveryMethod!.ShortName))
+               .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
+
+            CreateMap<OrderItem, OrderItemDto>()
+                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.Product.ProductId))
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.ProductName))
+                .ForMember(dest => dest.PictureUrl, opt => opt.MapFrom<OrderItemPictureUrlResolver>());
+
+            CreateMap<orderAddress, AddressDto>().ReverseMap();
+
+            CreateMap<DeliveryMethod, DeliverMethodDto>();
+
+            CreateMap<userAddress, AddressDto>().ReverseMap();
         }
     }
 }

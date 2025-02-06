@@ -14,7 +14,6 @@ namespace Talabat.APIs
     {
         public static async Task Main(string[] args)
         {
-
             var builder = WebApplication.CreateBuilder(args);
 
             #region Configure services
@@ -45,6 +44,14 @@ namespace Talabat.APIs
                 .AddApplicationPart(typeof(Controllers.AssemblyInfo).Assembly);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer().AddSwaggerGen();
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("Talabat", policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins(builder.Configuration["Urls:FrontBaseUrl"]!);
+                });
+            });
 
             // Configuring connection string
             builder.Services.AddApplicationServices();
@@ -83,6 +90,8 @@ namespace Talabat.APIs
             app.UseStaticFiles();
 
             app.UseStatusCodePagesWithReExecute("/Errors/{0}");
+
+            app.UseCors("Talabat");
 
             app.UseAuthorization();
             app.UseAuthentication();

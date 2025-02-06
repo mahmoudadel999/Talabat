@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using Talabat.Core.Domain.Contract;
+﻿using System.Linq.Expressions;
+using Talabat.Core.Domain.Contracts;
 
 namespace Talabat.Core.Domain.Specifications
 {

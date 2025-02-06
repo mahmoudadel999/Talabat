@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using Talabat.Core.Domain.Contract.Persistence;
 using Talabat.Core.Domain.Contract.Persistence.DbContextInitializer;
 using Talabat.Infrastructure.Persistence.Data;
@@ -13,19 +14,19 @@ namespace Talabat.Infrastructure.Persistence
     {
         public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
         {
-          
+
             #region StoreDbContext
-         
-            services.AddDbContext<StoreDbContext>(options =>
+
+            services.AddDbContext<StoreDbContext>((serviceProvider, options) =>
               {
                   options
                   .UseLazyLoadingProxies()
-                  .UseSqlServer(configuration.GetConnectionString("StoreContext"));
+                  .UseSqlServer(configuration.GetConnectionString("StoreContext"))
+                  .AddInterceptors(serviceProvider.GetRequiredService<AuditInterceptor>());
               });
-
+            services.AddScoped(typeof(AuditInterceptor));
 
             services.AddScoped(typeof(IStoreDbContextInitializer), typeof(StoreDbContextInitializer));
-            services.AddScoped(typeof(ISaveChangesInterceptor), typeof(CustomSaveChangesInterceptor));
 
             #endregion
 
@@ -40,7 +41,7 @@ namespace Talabat.Infrastructure.Persistence
 
 
             services.AddScoped(typeof(IStoreIdentityDbContextInitializer), typeof(StoreIdentityDbContextInitializer));
-         
+
             #endregion
 
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork.UnitOfWork));
