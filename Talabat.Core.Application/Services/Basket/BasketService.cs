@@ -1,25 +1,18 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Configuration;
-using Talabat.Core.Application.Abstraction.Models.Basket;
-using Talabat.Core.Application.Abstraction.Services.Basket;
-using Talabat.Core.Application.Exceptions;
-using Talabat.Core.Domain.Contract.Infrastructure;
+using Talabat.Shared.Exceptions;
+using Talabat.Shared.Models.Basket;
+using Talabat.Core.Application.Abstraction.Common.Contracts.Infrastructure;
 using Talabat.Core.Domain.Entities.Basket;
 
 namespace Talabat.Core.Application.Services.Basket
 {
-    internal class BasketService : IBasketService
+    internal class BasketService(IBasketRepository basketRepository, IMapper mapper, IConfiguration configuration) : IBasketService
     {
-        private readonly IMapper _mapper;
-        private readonly IConfiguration _configuration;
-        private readonly IBasketRepository _basketRepository;
+        private readonly IMapper _mapper = mapper;
+        private readonly IConfiguration _configuration = configuration;
+        private readonly IBasketRepository _basketRepository = basketRepository;
 
-        public BasketService(IBasketRepository basketRepository, IMapper mapper, IConfiguration configuration)
-        {
-            _mapper = mapper;
-            _configuration = configuration;
-            _basketRepository = basketRepository;
-        }
         public async Task<CustomerBasketDto> GetCustomerBasketAsync(string basketId)
         {
             var basket = await _basketRepository.GetAsync(basketId);

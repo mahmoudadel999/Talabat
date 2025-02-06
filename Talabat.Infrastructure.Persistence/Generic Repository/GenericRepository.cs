@@ -1,6 +1,6 @@
 ﻿using Talabat.Core.Domain.Common;
-using Talabat.Core.Domain.Contract;
 using Talabat.Core.Domain.Contract.Persistence;
+using Talabat.Core.Domain.Contracts;
 using Talabat.Infrastructure.Persistence.Data;
 
 namespace Talabat.Infrastructure.Persistence.Generic_Repository

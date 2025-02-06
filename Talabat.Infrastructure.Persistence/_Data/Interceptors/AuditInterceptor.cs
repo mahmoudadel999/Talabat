@@ -29,8 +29,8 @@ namespace Talabat.Infrastructure.Persistence.Data.Interceptors
                 .Where(entity => entity.State is EntityState.Added or EntityState.Modified);
             foreach (var entry in entries)
             {
-                /// if (entry.Entity is Order or OrderItem)
-                ///     _loginUserService.UserId = "";
+                if (string.IsNullOrEmpty(_loginUserService.UserId))
+                    _loginUserService.UserId = "";
 
                 if (entry.State is EntityState.Added)
                 {

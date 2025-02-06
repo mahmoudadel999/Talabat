@@ -8,9 +8,9 @@ using System.Text;
 using Talabat.Core.Application.Abstraction.Models.Auth;
 using Talabat.Core.Application.Abstraction.Models.Common;
 using Talabat.Core.Application.Abstraction.Services.Auth;
-using Talabat.Core.Application.Exceptions;
 using Talabat.Core.Application.Extensions;
 using Talabat.Core.Domain.Entities.Identity;
+using Talabat.Shared.Exceptions;
 
 namespace Talabat.Core.Application.Services.Auth
 {

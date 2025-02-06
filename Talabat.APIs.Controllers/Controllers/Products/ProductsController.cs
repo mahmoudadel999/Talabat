@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Talabat.APIs.Controllers.Base;
+using Talabat.APIs.Controllers.Controllers.Filters;
 using Talabat.Core.Application.Abstraction.Common;
 using Talabat.Core.Application.Abstraction.Models.Products;
 using Talabat.Core.Application.Abstraction.Products;
@@ -11,7 +10,7 @@ namespace Talabat.APIs.Controllers.Controllers.Products
 {
     public class ProductsController(IServiceManager serviceManager) : BaseApiController
     {
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Cached(600)]
         [HttpGet]
         public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetProducts([FromQuery] ProductSpecificationParams specParams)
         {

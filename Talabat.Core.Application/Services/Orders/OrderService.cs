@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
+using Talabat.Core.Application.Abstraction.Common.Contracts.Infrastructure;
 using Talabat.Core.Application.Abstraction.Models.Order;
 using Talabat.Core.Application.Abstraction.Models.Orders;
-using Talabat.Core.Application.Abstraction.Services.Basket;
 using Talabat.Core.Application.Abstraction.Services.Orders;
-using Talabat.Core.Application.Exceptions;
 using Talabat.Core.Domain.Contract.Persistence;
 using Talabat.Core.Domain.Entities.Orders;
 using Talabat.Core.Domain.Entities.Product;
 using Talabat.Core.Domain.Specifications.Orders;
+using Talabat.Shared.Exceptions;
 
 namespace Talabat.Core.Application.Services.Orders
 {
-    internal class OrderService(IUnitOfWork unitOfWork, IMapper mapper, IBasketService basketService) : IOrderService
+    internal class OrderService(IUnitOfWork unitOfWork, IMapper mapper, IBasketService basketService, IPaymentService paymentService) : IOrderService
     {
         public async Task<OrderToReturnDto> CreateOrderAsync(string buyerEmail, OrderToCreateDto order)
         {
@@ -54,23 +54,36 @@ namespace Talabat.Core.Application.Services.Orders
 
             var deliveryMethod = await unitOfWork.GetRepo<DeliveryMethod, int>().GetAsync(order.DeliveryMethodId);
 
-            var mappedOrder = new Order()
+            var orderRepo = unitOfWork.GetRepo<Order, int>();
+
+            var orderSpec = new OrderWithPaymentIntentSpec(basket.PaymentIntentId!);
+
+            var existOrder = await orderRepo.GetWithSpecAsync(orderSpec);
+
+            if (existOrder is not null)
+            {
+                orderRepo.Delete(existOrder);
+                await paymentService.CreateOrUpdatePaymnetIntent(basket.Id);
+            }
+
+            var CreatedOrder = new Order()
             {
                 BuyerEmail = buyerEmail,
                 ShippingAddress = address,
                 Items = orderItems,
                 Subtotal = subTotal,
                 DeliveryMethod = deliveryMethod,
+                PaymentIntentId = basket.PaymentIntentId!,
             };
 
-            await unitOfWork.GetRepo<Order, int>().AddAsync(mappedOrder);
+            await orderRepo.AddAsync(CreatedOrder);
 
             var createdOrder = await unitOfWork.CompleteAsync() > 0;
 
             if (!createdOrder)
                 throw new BadRequestException("An error has been occured during creating the order");
 
-            return mapper.Map<OrderToReturnDto>(mappedOrder);
+            return mapper.Map<OrderToReturnDto>(CreatedOrder);
         }
 
         public async Task<IEnumerable<OrderToReturnDto>> GetOrdersAsync(string buyerEmail)

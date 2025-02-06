@@ -3,10 +3,10 @@ using Talabat.Core.Application.Abstraction.Common;
 using Talabat.Core.Application.Abstraction.Models.Products;
 using Talabat.Core.Application.Abstraction.Products;
 using Talabat.Core.Application.Abstraction.Services.Product;
-using Talabat.Core.Application.Exceptions;
 using Talabat.Core.Domain.Contract.Persistence;
 using Talabat.Core.Domain.Entities.Product;
 using Talabat.Core.Domain.Specifications.Products;
+using Talabat.Shared.Exceptions;
 
 namespace Talabat.Core.Application.Services.Products
 {

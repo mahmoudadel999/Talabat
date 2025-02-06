@@ -45,6 +45,14 @@ namespace Talabat.APIs
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer().AddSwaggerGen();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("Talabat", policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins(builder.Configuration["Urls:FrontBaseUrl"]!);
+                });
+            });
+
             // Configuring connection string
             builder.Services.AddApplicationServices();
             builder.Services.AddPersistenceServices(builder.Configuration);
@@ -82,6 +90,8 @@ namespace Talabat.APIs
             app.UseStaticFiles();
 
             app.UseStatusCodePagesWithReExecute("/Errors/{0}");
+
+            app.UseCors("Talabat");
 
             app.UseAuthorization();
             app.UseAuthentication();
