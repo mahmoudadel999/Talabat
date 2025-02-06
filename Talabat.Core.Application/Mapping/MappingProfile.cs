@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Talabat.Core.Application.Abstraction.Models.Basket;
 using Talabat.Core.Application.Abstraction.Models.Common;
 using Talabat.Core.Application.Abstraction.Models.Orders;
 using Talabat.Core.Application.Abstraction.Models.Products;
@@ -8,6 +7,7 @@ using Talabat.Core.Domain.Entities.Orders;
 using Talabat.Core.Domain.Entities.Product;
 using userAddress = Talabat.Core.Domain.Entities.Identity.Address;
 using orderAddress = Talabat.Core.Domain.Entities.Orders.Address;
+using Talabat.Shared.Models.Basket;
 
 namespace Talabat.Core.Application.Mapping
 {

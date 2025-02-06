@@ -1,6 +1,6 @@
-﻿namespace Talabat.Core.Application.Exceptions
+﻿namespace Talabat.Shared.Exceptions
 {
-    internal class UnAuthorizedException : ApplicationException
+    public class UnAuthorizedException : ApplicationException
     {
         public UnAuthorizedException(string message)
             :   base()

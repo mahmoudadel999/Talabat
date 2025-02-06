@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Talabat.Core.Application.Abstraction.Models.Basket;
+﻿using Talabat.Shared.Models.Basket;
 
-namespace Talabat.Core.Application.Abstraction.Services.Basket
+namespace Talabat.Core.Application.Abstraction.Common.Contracts.Infrastructure
 {
     public interface IBasketService
     {

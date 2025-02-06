@@ -16,6 +16,10 @@ namespace Talabat.Core.Domain.Specifications.Orders
             AddOrderByDesc(order => order.OrderDate);
         }
 
+        //public OrderSpecifications(string paymentId) : base(order => order.PaymentIntentId == paymentId)
+        //{
+        //}
+
         private protected override void AddIncludes()
         {
             base.AddIncludes();

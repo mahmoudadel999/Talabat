@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Talabat.Core.Application.Abstraction.Common.Contracts.Infrastructure;
 using Talabat.Core.Application.Abstraction.Services;
-using Talabat.Core.Application.Abstraction.Services.Basket;
 using Talabat.Core.Application.Abstraction.Services.Orders;
 using Talabat.Core.Application.Mapping;
 using Talabat.Core.Application.Services;
@@ -18,11 +18,6 @@ namespace Talabat.Core.Application
 
 
             services.AddScoped(typeof(IBasketService), typeof(BasketService));
-
-            services.AddScoped(typeof(Func<IBasketService>), serviceProvider =>
-            {
-                return () => serviceProvider.GetRequiredService<IBasketService>();
-            });
 
             services.AddScoped(typeof(IOrderService), typeof(OrderService));
 

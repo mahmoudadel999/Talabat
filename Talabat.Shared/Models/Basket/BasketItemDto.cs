@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Talabat.Core.Application.Abstraction.Models.Basket
+namespace Talabat.Shared.Models.Basket
 {
     public class BasketItemDto
     {

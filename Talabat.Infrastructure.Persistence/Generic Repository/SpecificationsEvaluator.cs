@@ -1,5 +1,5 @@
 ﻿using Talabat.Core.Domain.Common;
-using Talabat.Core.Domain.Contract;
+using Talabat.Core.Domain.Contracts;
 
 namespace Talabat.Infrastructure.Persistence.Generic_Repository
 {

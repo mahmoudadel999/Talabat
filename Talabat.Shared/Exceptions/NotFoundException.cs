@@ -1,4 +1,4 @@
-﻿namespace Talabat.Core.Application.Exceptions
+﻿namespace Talabat.Shared.Exceptions
 {
     public class NotFoundException : ApplicationException
     {

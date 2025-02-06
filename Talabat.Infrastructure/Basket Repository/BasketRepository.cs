@@ -1,6 +1,6 @@
 ﻿using StackExchange.Redis;
 using System.Text.Json;
-using Talabat.Core.Domain.Contract.Infrastructure;
+using Talabat.Core.Application.Abstraction.Common.Contracts.Infrastructure;
 using Talabat.Core.Domain.Entities.Basket;
 
 namespace Talabat.Infrastructure.Basket_Repository
